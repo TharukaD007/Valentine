@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day 💝</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #ff1493;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.3);
+        }
+
+        .question {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #c71585;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 80px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 20, 147, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #ddd 0%, #bbb 100%);
+            color: #666;
+            position: relative;
+            transition: all 0.1s ease;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+        }
+
+        .celebration.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .celebration h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #ff1493;
+            margin-bottom: 30px;
+        }
+
+        .celebration img {
+            width: 350px;
+            max-width: 90%;
+            height: auto;
+            border-radius: 20px;
+            margin: 20px 0;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.3);
+        }
+
+        .celebration p {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #c71585;
+            margin-top: 20px;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 30px;
+            animation: fall linear forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                padding: 12px 30px;
+                min-width: 120px;
+            }
+
+            .button-container {
+                gap: 15px;
+                min-height: 70px;
+            }
+
+            .celebration img {
+                width: 280px;
+            }
+
+            .heart {
+                font-size: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                margin-bottom: 20px;
+            }
+
+            .question {
+                margin-bottom: 30px;
+            }
+
+            button {
+                padding: 10px 25px;
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="landing">
+            <h1>💝 Valentine's Day 💝</h1>
+            <p class="question">Will you be my Valentine? 🌹</p>
+            <div class="button-container">
+                <button id="yesBtn">Yes! 💕</button>
+                <button id="noBtn">No 😢</button>
+            </div>
+        </div>
+
+        <div id="celebration" class="celebration">
+            <h2>Yay! 🎉💖</h2>
+            <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" 
+                 alt="Celebration" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <p style="display:none; font-size: 80px;">💕🐻💋</p>
+            <p>I knew you'd say yes! 💝</p>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const landing = document.getElementById('landing');
+        const celebration = document.getElementById('celebration');
+        
+        let shrinkCount = 0;
+        const maxShrink = 25; // 25 attempts × 2% = 50% minimum size
+        
+        // Device detection
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const heartCount = isMobile ? 20 : 30;
+
+        // Prevent scrolling on touch devices
+        document.body.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+        function moveButton() {
+            const container = document.querySelector('.button-container');
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Calculate safe boundaries
+            const maxX = window.innerWidth - btnRect.width - 40;
+            const maxY = window.innerHeight - btnRect.height - 40;
+            const minX = 20;
+            const minY = 20;
+            
+            // Generate random position
+            const newX = Math.random() * (maxX - minX) + minX;
+            const newY = Math.random() * (maxY - minY) + minY;
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            
+            // Shrink button (2% each time, stop at 50%)
+            if (shrinkCount < maxShrink) {
+                shrinkCount++;
+                const scale = 1 - (shrinkCount * 0.02);
+                noBtn.style.transform = `scale(${scale})`;
+            }
+
+            // Mobile vibration feedback
+            if (isMobile && navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        function showCelebration() {
+            landing.style.display = 'none';
+            celebration.classList.add('active');
+            
+            // Create falling hearts
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+
+            // Mobile vibration pattern
+            if (isMobile && navigator.vibrate) {
+                navigator.vibrate([200, 100, 200, 100, 200]);
+            }
+        }
+
+        // Desktop events
+        if (!isMobile) {
+            noBtn.addEventListener('mouseenter', moveButton);
+            noBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                moveButton();
+            });
+        }
+
+        // Mobile events
+        if (isMobile) {
+            noBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveButton();
+            });
+
+            noBtn.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+            });
+        }
+
+        // Yes button works on both
+        yesBtn.addEventListener('click', showCelebration);
+        yesBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showCelebration();
+        });
+    </script>
+</body>
+</html>
