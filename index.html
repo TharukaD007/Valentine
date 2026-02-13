@@ -466,15 +466,12 @@
             <!-- END OF MESSAGE -->
         </p>
         
-        <!-- CUSTOM IMAGE - Replace the URL below with your own image -->
-        <!-- Try these different URL formats if one doesn't work: -->
-        
-        <!-- Option 1: Direct Imgur link -->
-        <img src="https://i.imgur.com/uH6yuxO.jpg" 
-             alt="Custom Image" 
-             style="width: 250px; max-width: 80%; border-radius: 15px; margin: 15px 0; box-shadow: 0 4px 15px rgba(255, 20, 147, 0.3); position: relative; z-index: 1; display: block;"
-             onerror="this.onerror=null; this.src='https://i.imgur.com/uH6yuxO.png';">
-        
+        <!-- CUSTOM IMAGE with blur effect -->
+        <div style="position: relative; z-index: 1; margin: 20px 0;">
+            <img src="https://i.postimg.cc/qqqG3D8k/IMG-20260214-001548.jpg" 
+                 alt="Special Photo" 
+                 style="width: 100%; max-width: 350px; border-radius: 15px; box-shadow: 0 4px 20px rgba(255, 20, 147, 0.4); display: block; margin: 0 auto; filter: blur(1.5px); opacity: 0.95;">
+        </div>
         <!-- END CUSTOM IMAGE -->
         
         <button class="close-popup" onclick="closePopup()">Close 💗</button>
@@ -499,43 +496,39 @@
         }, { passive: false });
 
         function moveButton() {
-            // Predefined safe positions across the screen (percentage based)
-            const positions = [
-                { x: 10, y: 15 },   // Top left
-                { x: 45, y: 10 },   // Top center
-                { x: 80, y: 15 },   // Top right
-                { x: 15, y: 45 },   // Middle left
-                { x: 75, y: 50 },   // Middle right
-                { x: 10, y: 75 },   // Bottom left
-                { x: 45, y: 80 },   // Bottom center
-                { x: 80, y: 75 },   // Bottom right
-                { x: 30, y: 30 },   // Upper middle left
-                { x: 65, y: 35 },   // Upper middle right
-                { x: 25, y: 60 },   // Lower middle left
-                { x: 70, y: 65 }    // Lower middle right
-            ];
-            
-            // Pick a random position
-            const randomPos = positions[Math.floor(Math.random() * positions.length)];
-            
-            // Set position to fixed on first interaction if not already
+            // On first call, make the button fixed and remember its initial position
             if (noBtn.style.position !== 'fixed') {
-                const currentRect = noBtn.getBoundingClientRect();
+                const rect = noBtn.getBoundingClientRect();
                 noBtn.style.position = 'fixed';
-                noBtn.style.left = currentRect.left + 'px';
-                noBtn.style.top = currentRect.top + 'px';
-                noBtn.style.margin = '0';
+                noBtn.style.left = rect.left + 'px';
+                noBtn.style.top = rect.top + 'px';
+                noBtn.style.zIndex = '999';
             }
             
-            // Calculate position based on percentage
-            const newX = (window.innerWidth * randomPos.x / 100);
-            const newY = (window.innerHeight * randomPos.y / 100);
+            // Safe positions (pixels from edges)
+            const positions = [
+                { left: '10%', top: '15%' },
+                { left: '45%', top: '10%' },
+                { left: '80%', top: '15%' },
+                { left: '10%', top: '45%' },
+                { left: '75%', top: '45%' },
+                { left: '10%', top: '75%' },
+                { left: '45%', top: '80%' },
+                { left: '80%', top: '75%' },
+                { left: '30%', top: '30%' },
+                { left: '60%', top: '35%' },
+                { left: '20%', top: '60%' },
+                { left: '65%', top: '65%' }
+            ];
             
-            // Apply new position
-            noBtn.style.left = newX + 'px';
-            noBtn.style.top = newY + 'px';
+            // Pick random position
+            const pos = positions[Math.floor(Math.random() * positions.length)];
             
-            // Shrink button (5% each time, stop at 50%)
+            // Move to new position
+            noBtn.style.left = pos.left;
+            noBtn.style.top = pos.top;
+            
+            // Shrink effect
             if (shrinkCount < maxShrink) {
                 shrinkCount++;
                 const scale = 1 - (shrinkCount * 0.05);
@@ -544,7 +537,7 @@
                 noBtn.style.transform = `scale(0.5)`;
             }
 
-            // Mobile vibration feedback
+            // Vibration
             if (isMobile && navigator.vibrate) {
                 navigator.vibrate(50);
             }
